@@ -11,7 +11,7 @@ public class Client extends GermanTranslator{
      *
      */
 
-    void display(int aNumber) {
+    void isplay(int aNumber) {
         // In dieser Methode soll die Methode translateNumber
         // mit dem übergegebenen Wert der Variable aNumber
         // aufgerufen werden.
