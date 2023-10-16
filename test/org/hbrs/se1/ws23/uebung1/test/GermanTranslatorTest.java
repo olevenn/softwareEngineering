@@ -1,6 +1,7 @@
 package org.hbrs.se1.ws23.uebung1.test;
 
 import org.hbrs.se1.ws23.uebung1.control.GermanTranslator;
+import org.hbrs.se1.ws23.uebung1.view.Client;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,7 +11,14 @@ class GermanTranslatorTest {
     @Test
     void aPositiveTest() {
         GermanTranslator translator = new GermanTranslator();
-        String value = translator.translateNumber(0);
-        assertEquals(value, "null");
+        String value = translator.translateNumber(1);
+        assertEquals(value, "eins");
+    }
+
+    @Test
+    void bPositiveTest() {
+        Client client = new Client();
+        String value = client.translateNumber(1);
+        assertEquals(value, "eins");
     }
 }
