@@ -8,7 +8,8 @@ public class Client extends GermanTranslator{
     /*
      * Methode zur Ausgabe einer Zahl auf der Console
      * (auch bezeichnet als CLI, Terminal)
-     *
+     * //Tranlator translator = TranslatorFactory.createGermanFactory();
+     * //String result = translator.translateNumber (aNumber);
      */
 
     void display(int aNumber) {
