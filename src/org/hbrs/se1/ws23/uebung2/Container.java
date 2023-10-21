@@ -12,30 +12,27 @@ public class Container {
 
     public void addMember(MemberClass tmp) throws ContainerException {
 
-        try {
-            for (int i = memberListe.size() - 1; i >= 0; i--) {
-                if (tmp.getID() == memberListe.get(i).getID()) {
-                    throw new ContainerException("Das Member-Object mit der ID " + tmp.getID() + " ist bereits vorhanden!");
-                }
-            }
-            memberListe.add(tmp);
 
-        } catch (ContainerException e) {
-            System.out.println(e.getMessage());
+        for (int i = memberListe.size() - 1; i >= 0; i--) {
+            if (tmp.getID() == memberListe.get(i).getID()) {
+                throw new ContainerException("Das Member-Object mit der ID " + tmp.getID() + " ist bereits vorhanden!");
+            }
         }
+        memberListe.add(tmp);
+
 
     }
 
     public String deleteMember(int id) {
-
         for (int i = memberListe.size() - 1; i >= 0; i--) {
             if (id == memberListe.get(i).getID()) {
                 memberListe.remove(i);
                 return "Gelöscht!";
             }
         }
-        return "Das Mitglied mit der ID: " + id + "gibt es nicht!"; //Vermischung von Fehlerbehandlung und Anwendung
+        return "Das Mitglied mit der ID: " + id + " gibt es nicht!"; //Vermischung von Fehlerbehandlung und Anwendung
     }
+
     public void dump() {
         for (int i = memberListe.size() - 1; i >= 0; i--) {
             memberListe.get(i).toString();
