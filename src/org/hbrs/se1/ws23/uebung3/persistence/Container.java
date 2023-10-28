@@ -7,7 +7,7 @@ public class Container implements Serializable{
     private static Container container = new Container();
     public ArrayList<Member> memberListe;
 
-    public Container() {
+    private Container() {
         this.memberListe = new ArrayList<Member>();
     }
 
@@ -41,6 +41,10 @@ public class Container implements Serializable{
     public int size() {
         //Ausgabe der Größe von der ArrayListe
         return memberListe.size();
+    }
+
+    public ArrayList<Member> getCurrentList() {
+        return memberListe;
     }
 
     public void store() throws PersistenceException, IOException {
