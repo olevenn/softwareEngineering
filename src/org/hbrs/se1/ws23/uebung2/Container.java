@@ -19,8 +19,6 @@ public class Container {
             }
         }
         memberListe.add(tmp);
-
-
     }
 
     public String deleteMember(int id) {
@@ -35,7 +33,7 @@ public class Container {
 
     public void dump() {
         for (int i = memberListe.size() - 1; i >= 0; i--) {
-            memberListe.get(i).toString();
+            System.out.println(memberListe.get(i).toString());
         }
     }
 

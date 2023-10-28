@@ -27,6 +27,7 @@ public class ContainerTest {
     @Test
     void testAddMemberExcep() {
         assertThrows(ContainerException.class, () -> memberListe.addMember(member1));
+        //Null Test muss ich noch einfügen und als Exception auffangen
     }
     @Test
     void deleteMemberTest(){
