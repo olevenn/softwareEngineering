@@ -2,6 +2,7 @@ package org.hbrs.se1.ws23.uebung3.persistence;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 public class Container implements Serializable{
     private static Container container = new Container();
@@ -48,14 +49,20 @@ public class Container implements Serializable{
     }
 
     public void store() throws PersistenceException, IOException {
-        FileOutputStream fileOutputStream = new FileOutputStream(new File("Test.txt"));
-        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream(new File("Test.txt"));
+            ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
 
-        for (Member tmp: memberListe) {
-            outputStream.writeObject(tmp);
+            for (Member tmp: memberListe) {
+                outputStream.writeObject(tmp);
+            }
+            outputStream.close();
+            fileOutputStream.close();
+        } catch (IOException e) {
+
+        } finally {
+            //MemberView.dump(memberListe);
         }
-        outputStream.close();
-        fileOutputStream.close();
     }
 
     public void load() throws PersistenceException, IOException, ClassNotFoundException {
@@ -64,6 +71,8 @@ public class Container implements Serializable{
         ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
         memberListe.clear();
 
+
+
         try {
             while (true) {
                 Member tmp = (Member) inputStream.readObject();
@@ -71,6 +80,9 @@ public class Container implements Serializable{
             }
         } catch (EOFException e) {
             //EOFException wird geworfen, wenn am Ende der Datei angelangt ist
+
+        } finally {
+            //MemberView.dump(memberListe);
         }
         fileInputStream.close();
         inputStream.close();

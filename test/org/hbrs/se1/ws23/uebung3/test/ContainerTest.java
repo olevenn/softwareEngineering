@@ -21,12 +21,33 @@ public class ContainerTest {
     @BeforeEach
     void init() throws ContainerException {
         container = Container.getInstance();
+        container.memberListe.clear();
         member1 = new MemberClass(0);
         member2 = new MemberClass(1);
         member3 = new MemberClass(2);
         container.addMember(member1);
         container.addMember(member2);
         container.addMember(member3);
+    }
+
+    @Test
+    void loeschenMember() {
+        assertEquals(3, container.size());
+        container.deleteMember(0);
+        assertEquals(2, container.size());
+        container.deleteMember(1);
+        assertEquals(1, container.size());
+        container.deleteMember(2);
+        assertEquals(0, container.size());
+    }
+
+    @Test
+    void loeschenException() {
+        container.deleteMember(0);
+        container.deleteMember(1);
+        container.deleteMember(2);
+
+        assertEquals("Das Mitglied mit der ID: 2" + " gibt es nicht!", container.deleteMember(2));
     }
 
     @Test
