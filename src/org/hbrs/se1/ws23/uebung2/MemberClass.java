@@ -1,9 +1,9 @@
 package org.hbrs.se1.ws23.uebung2;
 
 public class MemberClass implements Member {
-    private int id;
+    private Integer id;
 
-    public MemberClass(int id) {
+    public MemberClass(Integer id) {
         this.id = id;
     }
 

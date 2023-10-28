@@ -12,7 +12,9 @@ public class Container {
 
     public void addMember(MemberClass tmp) throws ContainerException {
 
-
+        if(tmp == null) {
+            throw new ContainerException("Das Objekt ist leer!");
+        }
         for (int i = memberListe.size() - 1; i >= 0; i--) {
             if (tmp.getID() == memberListe.get(i).getID()) {
                 throw new ContainerException("Das Member-Object mit der ID " + tmp.getID() + " ist bereits vorhanden!");

@@ -61,4 +61,8 @@ public class ContainerTest {
         assertEquals(memberListe.size(), 3);
     }
 
+    @Test
+    void testNullEingabe() throws ContainerException {
+        assertThrows(ContainerException.class, () -> memberListe.addMember(null));
+    }
 }
