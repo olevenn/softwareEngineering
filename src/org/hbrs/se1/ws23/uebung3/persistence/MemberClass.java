@@ -1,6 +1,8 @@
-package org.hbrs.se1.ws23.uebung2;
+package org.hbrs.se1.ws23.uebung3.persistence;
 
-public class MemberClass implements Member {
+import java.io.Serializable;
+
+public class MemberClass implements Member, Serializable {
     private Integer id;
 
     public MemberClass(Integer id) {
@@ -12,7 +14,6 @@ public class MemberClass implements Member {
     }
 
     public String toString() {
-        System.out.println("Member (ID = " + this.id+ ")");
         return "Member (ID = " + this.id+ ")";
     }
 }
