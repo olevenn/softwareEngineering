@@ -12,9 +12,9 @@ public class Container implements Serializable{
         this.memberListe = new ArrayList<Member>();
     }
 
-    public static Container getInstance() {
+    public static synchronized Container getInstance() {
         return container;
-    }
+    } //synchronized sagt aus, das bei parallele Verarbeitung nichts passiert und immer erst die Methode ganz abgearbeitet wird.
 
     public void addMember(MemberClass tmp) throws ContainerException {
 
@@ -59,7 +59,7 @@ public class Container implements Serializable{
             outputStream.close();
             fileOutputStream.close();
         } catch (IOException e) {
-
+            e.printStackTrace();
         } finally {
             //MemberView.dump(memberListe);
         }
