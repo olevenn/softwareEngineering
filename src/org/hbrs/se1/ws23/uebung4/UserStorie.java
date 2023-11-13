@@ -1,6 +1,8 @@
 package org.hbrs.se1.ws23.uebung4;
 
-public class UserStorie {
+import java.io.Serializable;
+
+public class UserStorie implements Serializable {
     public int ID;
     public String Beschreibung;
     public String Akzeptanzkriterium;

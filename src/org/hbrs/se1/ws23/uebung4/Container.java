@@ -48,35 +48,64 @@ public class Container {
         }
         return false;
     }
+    public int size() {
+        return liste.size();
+    }
 
     public void setPersistenceStrategie(PersistenceStrategy persistenceStrategy) {
         if (connectionOpen == true) {
             try {
                 this.closeConnection();
-            } catch (org.hbrs.se1.ws23.solutions.uebung3.persistence.PersistenceException e) {
+            } catch (PersistenceException e) {
                 // ToDo here: delegate to client (next year maybe ;-))
                 e.printStackTrace();
             }
         }
         this.strategy = persistenceStrategy;
     }
-    private void openConnection() throws org.hbrs.se1.ws23.solutions.uebung3.persistence.PersistenceException {
+    private void openConnection() throws PersistenceException {
         try {
             this.strategy.openConnection();
             connectionOpen = true;
         } catch( UnsupportedOperationException e ) {
-            throw new org.hbrs.se1.ws23.solutions.uebung3.persistence.PersistenceException(
-                    org.hbrs.se1.ws23.solutions.uebung3.persistence.PersistenceException.ExceptionType.ImplementationNotAvailable ,
+            throw new PersistenceException(
+                    PersistenceException.ExceptionType.ImplementationNotAvailable ,
                     "Not implemented!" );
         }
     }
 
-    private void closeConnection() throws org.hbrs.se1.ws23.solutions.uebung3.persistence.PersistenceException {
+    private void closeConnection() throws PersistenceException {
         try {
             this.strategy.closeConnection();
             connectionOpen = false;
         } catch( UnsupportedOperationException e ) {
-            throw new org.hbrs.se1.ws23.solutions.uebung3.persistence.PersistenceException( org.hbrs.se1.ws23.solutions.uebung3.persistence.PersistenceException.ExceptionType.ImplementationNotAvailable , "Not implemented!" );
+            throw new PersistenceException( PersistenceException.ExceptionType.ImplementationNotAvailable , "Not implemented!" );
         }
+    }
+
+    public void store() throws PersistenceException {
+        if (this.strategy == null)
+            throw new PersistenceException( PersistenceException.
+                    ExceptionType.NoStrategyIsSet,
+                    "Strategy not initialized");
+
+        if (connectionOpen == false) {
+            this.openConnection();
+            connectionOpen = true;
+        }
+        this.strategy.save( this.liste  );
+    }
+
+    public void load() throws PersistenceException {
+        if (this.strategy == null)
+            throw new PersistenceException( PersistenceException.ExceptionType.NoStrategyIsSet,
+                    "Strategy not initialized");
+
+        if (connectionOpen == false) {
+            this.openConnection();
+            connectionOpen = true;
+        }
+        List<UserStorie> liste = this.strategy.load();
+        this.liste = liste; // MayBe merge
     }
 }

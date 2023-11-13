@@ -93,7 +93,6 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
             // Workaround!
             // fis = new FileInputStream( LOCATION );
             // ois = new ObjectInputStream( fis );
-
             // Auslesen der Liste
             Object obj = ois.readObject();
             if (obj instanceof List<?>) {

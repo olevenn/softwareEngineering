@@ -1,13 +1,14 @@
 package org.hbrs.se1.ws23.uebung4;
 
 import org.hbrs.se1.ws23.uebung4.UserStorie;
+import org.hbrs.se1.ws23.uebung4.persistence.PersistenceException;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class Terminal {
     Container container = Container.getInstance();
-    public void startTerminal() {
+    public void startTerminal() throws PersistenceException {
         Scanner scanner = new Scanner(System.in);
         String ende = "exit";
 
@@ -66,9 +67,15 @@ public class Terminal {
                 case "search":
                     System.out.println("Eingabe der gesuchten ID: ");
                     int id = scanner.nextInt();
-                    System.out.println(search(id));
+                    search(id);
                 case "dump":
                     dump();
+                case "store":
+                    container.store();
+                case "load":
+                    container.load();
+                case "help":
+                    help();
 
             }
 
@@ -84,8 +91,13 @@ public class Terminal {
         System.out.println("User eingefügt!");
     }
 
-    public String search(int ID) {
-        return "";
+    public void search(int ID) {
+        List<UserStorie> liste = container.getCurrentList();
+        for (UserStorie p : liste) {
+            if(p.getID() == ID)
+                p.toString();
+        }
+
     }
 
     public void dump () {
@@ -94,5 +106,9 @@ public class Terminal {
         for (UserStorie p : liste) {
             System.out.println(p.toString());
         }
+    }
+
+    public void help() {
+        System.out.println("Es gibt folgende Befehle: enter, store, load, dump, search, exit, help");
     }
 }
