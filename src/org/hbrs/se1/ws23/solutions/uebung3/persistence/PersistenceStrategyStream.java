@@ -91,8 +91,8 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
         try {
             // Create Streams here instead using "this.openConnection();"
             // Workaround!
-            // fis = new FileInputStream( LOCATION );
-            // ois = new ObjectInputStream( fis );
+            fis = new FileInputStream( LOCATION );
+            ois = new ObjectInputStream( fis );
 
             // Auslesen der Liste
             Object obj = ois.readObject();

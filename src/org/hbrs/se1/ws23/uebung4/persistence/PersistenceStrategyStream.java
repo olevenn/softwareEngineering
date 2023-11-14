@@ -1,12 +1,14 @@
 package org.hbrs.se1.ws23.uebung4.persistence;
 
+import org.hbrs.se1.ws23.uebung4.UserStorie;
+
 import java.io.*;
 import java.util.List;
 
 public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
 
     // URL der Datei, in der die Objekte gespeichert werden
-    private String LOCATION = "objects.ser";
+    private String LOCATION = "test.txt";
 
     private ObjectOutputStream oos = null;
     private FileOutputStream fos = null;
@@ -28,17 +30,17 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
      */
     public void openConnection() throws PersistenceException {
         try {
-            fos = new FileOutputStream( LOCATION );
-            fis = new FileInputStream( LOCATION );
+            fos = new FileOutputStream(LOCATION);
+            fis = new FileInputStream(LOCATION);
         } catch (FileNotFoundException e) {
-            throw new PersistenceException( PersistenceException.ExceptionType.ConnectionNotAvailable
-            , "Error in opening the connection, File could not be found");
+            throw new PersistenceException(PersistenceException.ExceptionType.ConnectionNotAvailable
+                    , "Error in opening the connection, File could not be found");
         }
         try {
-            oos = new ObjectOutputStream( fos );
-            ois = new ObjectInputStream(  fis  );
+            oos = new ObjectOutputStream(fos);
+            ois = new ObjectInputStream(fis);
         } catch (IOException e) {
-            throw new PersistenceException( PersistenceException.ExceptionType.ConnectionNotAvailable
+            throw new PersistenceException(PersistenceException.ExceptionType.ConnectionNotAvailable
                     , "Error in opening the connection, problems with the stream");
         }
     }
@@ -53,9 +55,9 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
             // Closing the inputstreams for loading
             if (ois != null) ois.close();
             if (fis != null) fis.close();
-        } catch( IOException e ) {
+        } catch (IOException e) {
             // Lazy solution: catching the exception of any closing activity ;-)
-            throw new PersistenceException(PersistenceException.ExceptionType.ClosingFailure , "error while closing connections");
+            throw new PersistenceException(PersistenceException.ExceptionType.ClosingFailure, "error while closing connections");
         }
     }
 
@@ -66,15 +68,16 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
     public void save(List<E> list) throws PersistenceException {
         // Write the objects to stream
         try {
-            System.out.println( "LOG: Es wurden " +  list.size() + " Member-Objekte wurden erfolgreich gespeichert!");
-            oos.writeObject( list );
-        }
-        catch (IOException e) {
+            System.out.println("LOG: Es wurden " + list.size() + " Member-Objekte wurden erfolgreich gespeichert!");
+            for(E tmp : list) {
+                oos.writeObject(tmp);
+            }
+        } catch (IOException e) {
             // Koennte man ausgeben für interne Debugs: e.printStackTrace();
             // Chain of Responsibility: Hochtragen der Exception in Richtung Ausgabe (UI)
             // Uebergabe in ein lesbares Format fuer den Benutzer
             e.printStackTrace();
-            throw new PersistenceException( PersistenceException.ExceptionType.SaveFailure , "Fehler beim Speichern der Datei!");
+            throw new PersistenceException(PersistenceException.ExceptionType.SaveFailure, "Fehler beim Speichern der Datei!");
         }
     }
 
@@ -91,25 +94,37 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
         try {
             // Create Streams here instead using "this.openConnection();"
             // Workaround!
-            // fis = new FileInputStream( LOCATION );
-            // ois = new ObjectInputStream( fis );
+            fis = new FileInputStream( LOCATION );
+            ois = new ObjectInputStream( fis );
             // Auslesen der Liste
+
+            File file = new File(LOCATION);
+            if (!file.exists()) {
+                throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure, "Datei existiert nicht!");
+            }
+
+            if (file.length() == 0) {
+                throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure, "Datei ist leer!");
+            }
+
+
             Object obj = ois.readObject();
+            System.out.println("Test");
             if (obj instanceof List<?>) {
                 list = (List) obj;
             }
+
+
             System.out.println("LOG: Es wurden " + list.size() + " User Stories erfolgreich reingeladen!");
             return list;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // Sup-Optimal, da Exeception in Form eines unlesbaren Stake-Traces ausgegeben wird
             e.printStackTrace();
-            throw new PersistenceException( PersistenceException.ExceptionType.LoadFailure , "Fehler beim Laden der Datei!");
-        }
-        catch (ClassNotFoundException e) {
+            throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure, "Fehler beim Laden der Datei!");
+        } catch (ClassNotFoundException e) {
             // Chain of Responsbility erfuellt, durch Throw der Exceotion kann UI
             // benachrichtigt werden!
-            throw new PersistenceException( PersistenceException.ExceptionType.LoadFailure , "Fehler beim Laden der Datei! Class not found!");
+            throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure, "Fehler beim Laden der Datei! Class not found!");
         }
     }
 }

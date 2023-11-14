@@ -1,14 +1,16 @@
 package org.hbrs.se1.ws23.uebung4;
 
+
 import org.hbrs.se1.ws23.uebung4.UserStorie;
 import org.hbrs.se1.ws23.uebung4.persistence.PersistenceException;
 
+import java.io.*;
 import java.util.List;
 import java.util.Scanner;
 
-public class Terminal {
+public class Terminal implements Serializable {
     Container container = Container.getInstance();
-    public void startTerminal() throws PersistenceException {
+    public void startTerminal() throws PersistenceException, IOException {
         Scanner scanner = new Scanner(System.in);
         String ende = "exit";
 
@@ -68,15 +70,22 @@ public class Terminal {
                     System.out.println("Eingabe der gesuchten ID: ");
                     int id = scanner.nextInt();
                     search(id);
+                    break;
                 case "dump":
                     dump();
+                    break;
                 case "store":
                     container.store();
+                    break;
                 case "load":
-                    container.load();
+                    //container.load();
+                    load();
+                    break;
                 case "help":
                     help();
-
+                    break;
+                default:
+                    help();
             }
 
 
@@ -106,6 +115,28 @@ public class Terminal {
         for (UserStorie p : liste) {
             System.out.println(p.toString());
         }
+    }
+
+    public void load() throws IOException {
+        FileInputStream fileInputStream = new FileInputStream("C:\\Users\\Julian\\IdeaProjects\\codesSE2023\\test.txt");
+        ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
+
+
+
+        try {
+            while (true) {
+                UserStorie tmp = (UserStorie) inputStream.readObject();
+                tmp.toString();
+                container.getCurrentList().add(tmp);
+            }
+        } catch (EOFException | ClassNotFoundException e) {
+            //EOFException wird geworfen, wenn am Ende der Datei angelangt ist
+
+        } finally {
+            //MemberView.dump(memberListe);
+        }
+        fileInputStream.close();
+        inputStream.close();
     }
 
     public void help() {
