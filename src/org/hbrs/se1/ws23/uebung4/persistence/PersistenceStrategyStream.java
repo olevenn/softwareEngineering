@@ -94,18 +94,9 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
         try {
             // Create Streams here instead using "this.openConnection();"
             // Workaround!
-            fis = new FileInputStream( LOCATION );
+            fis = new FileInputStream( "C:\\Users\\Julian\\IdeaProjects\\codesSE2023\\test.txt" );
             ois = new ObjectInputStream( fis );
             // Auslesen der Liste
-
-            File file = new File(LOCATION);
-            if (!file.exists()) {
-                throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure, "Datei existiert nicht!");
-            }
-
-            if (file.length() == 0) {
-                throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure, "Datei ist leer!");
-            }
 
 
             Object obj = ois.readObject();
@@ -115,7 +106,8 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
             }
 
 
-            System.out.println("LOG: Es wurden " + list.size() + " User Stories erfolgreich reingeladen!");
+
+            //System.out.println("LOG: Es wurden " + list.size() + " User Stories erfolgreich reingeladen!");
             return list;
         } catch (IOException e) {
             // Sup-Optimal, da Exeception in Form eines unlesbaren Stake-Traces ausgegeben wird

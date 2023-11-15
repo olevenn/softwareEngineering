@@ -10,6 +10,7 @@ import java.util.Scanner;
 
 public class Terminal implements Serializable {
     Container container = Container.getInstance();
+
     public void startTerminal() throws PersistenceException, IOException {
         Scanner scanner = new Scanner(System.in);
         String ende = "exit";
@@ -18,11 +19,11 @@ public class Terminal implements Serializable {
             System.out.println("Geben Sie ihr Codewort ein: ");
             String codeWort = scanner.next();
 
-            if(codeWort.equals(ende))
+            if (codeWort.equals(ende))
                 break;
 
 
-            switch (codeWort){
+            switch (codeWort) {
                 case "enter":
                     int ID = 0;
                     String Beschreibung = "";
@@ -49,22 +50,43 @@ public class Terminal implements Serializable {
 
                     System.out.println("Eingabe des RM: ");
                     RM = scanner.nextInt();
+                    if(RM > 5 || RM < 0) {
+                        System.out.println("RM kann nur zwischen 0 und 5 sein. Erneute Eingabe: ");
+                        RM = scanner.nextInt();
+                    }
 
                     System.out.println("Eingabe des RS: ");
                     RS = scanner.nextInt();
+                    if(RS > 5 || RS < 0) {
+                        System.out.println("RS kann nur zwischen 0 und 5 sein. Erneute Eingabe: ");
+                        RS = scanner.nextInt();
+                    }
 
                     System.out.println("Eingabe des RR: ");
                     RR = scanner.nextInt();
+                    if(RR > 5 || RR < 0) {
+                        System.out.println("RR kann nur zwischen 0 und 5 sein. Erneute Eingabe: ");
+                        RR = scanner.nextInt();
+                    }
+
 
                     System.out.println("Eingabe des RA: ");
                     RA = scanner.nextInt();
+                    if(RA < 0) {
+                        System.out.println("RA kann nur zwischen 0 und \u221E sein. Erneute Eingabe: ");
+                        RA = scanner.nextInt();
+                    }
+
+
 
                     System.out.println("Eingabe des Projekts: ");
                     while (Projekt.isEmpty()) {
                         Projekt = scanner.nextLine();
                     }
 
-                    enter(ID, Beschreibung, Akzeptanzkriterium, RM, RS, RR, RA, Projekt);
+                    double prio = ((double) (RM + RS) / (RA + RR));
+
+                    enter(ID, Beschreibung, Akzeptanzkriterium, RM, RS, RR, RA, Projekt, prio);
                     break;
                 case "search":
                     System.out.println("Eingabe der gesuchten ID: ");
@@ -80,6 +102,7 @@ public class Terminal implements Serializable {
                 case "load":
                     //container.load();
                     load();
+                    System.out.println("LOG: Es wurden erfolgreich " + container.getCurrentList().size() + " UserStories geladen!");
                     break;
                 case "help":
                     help();
@@ -89,27 +112,27 @@ public class Terminal implements Serializable {
             }
 
 
-
         }
 
 
     }
-    public void enter(int ID, String Beschreibung, String Akzeptanzkriterium, int RM, int RS, int RR, int RA, String Projekt) {
+
+    public void enter(int ID, String Beschreibung, String Akzeptanzkriterium, int RM, int RS, int RR, int RA, String Projekt, double prio) {
         //UserStorie tmp = new UserStorie(ID, Beschreibung, Akzeptanzkriterium, RM, RS, RR, RA, Projekt);
-        container.addUserStorie(new UserStorie(ID, Beschreibung, Akzeptanzkriterium, RM, RS, RR, RA, Projekt));
+        container.addUserStorie(new UserStorie(ID, Beschreibung, Akzeptanzkriterium, RM, RS, RR, RA, Projekt, prio));
         System.out.println("User eingefügt!");
     }
 
     public void search(int ID) {
         List<UserStorie> liste = container.getCurrentList();
         for (UserStorie p : liste) {
-            if(p.getID() == ID)
-                p.toString();
+            if (p.getID() == ID)
+                System.out.println(p);
         }
 
     }
 
-    public void dump () {
+    public void dump() {
         List<UserStorie> liste = container.getCurrentList();
         System.out.println("Ausgabe aller User-Stories: ");
         for (UserStorie p : liste) {
@@ -121,19 +144,14 @@ public class Terminal implements Serializable {
         FileInputStream fileInputStream = new FileInputStream("C:\\Users\\Julian\\IdeaProjects\\codesSE2023\\test.txt");
         ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
 
-
-
         try {
             while (true) {
                 UserStorie tmp = (UserStorie) inputStream.readObject();
-                tmp.toString();
                 container.getCurrentList().add(tmp);
             }
         } catch (EOFException | ClassNotFoundException e) {
             //EOFException wird geworfen, wenn am Ende der Datei angelangt ist
 
-        } finally {
-            //MemberView.dump(memberListe);
         }
         fileInputStream.close();
         inputStream.close();
