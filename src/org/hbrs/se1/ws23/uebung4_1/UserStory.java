@@ -2,7 +2,7 @@ package org.hbrs.se1.ws23.uebung4_1;
 
 import java.io.Serializable;
 
-public class UserStory implements Serializable {
+public class UserStory implements Serializable, Comparable<UserStory> {
     public int ID;
     public String Beschreibung;
     public String Akzeptanzkriterium;
@@ -40,5 +40,10 @@ public class UserStory implements Serializable {
                 "\n>>> Projekt: " + Projekt +
                 "\n>>> Prio: " + Prio +
                 "\n\n\n");
+    }
+
+    @Override
+    public int compareTo(UserStory o) {
+        return Integer.compare(this.ID, o.ID);
     }
 }

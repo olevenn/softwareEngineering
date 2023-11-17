@@ -30,7 +30,7 @@ public class EingabeDialog implements Serializable {
                     BefehleVerarbeitung.search(scanner, container);
                     break;
                 case "dump":
-                    //dump();
+                    UserStoryView.dump(container);
                     break;
                 case "store":
                     container.store();
