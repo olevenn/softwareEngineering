@@ -1,6 +1,7 @@
-package org.hbrs.se1.ws23.uebung4.persistence;
+package org.hbrs.se1.ws23.uebung4_1.persistence;
 
-import org.hbrs.se1.ws23.uebung4.UserStorie;
+import org.hbrs.se1.ws23.uebung4_1.Container;
+import org.hbrs.se1.ws23.uebung4_1.UserStory;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -26,22 +27,22 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
     @Override
     /**
      * Used only for openining a connection for storing objects
-     * Exception occurs in some SDKs, when both are created (TODO!)
+     * Exception occurs in some SDKs, when both are created
      * Workaround: open the Streams in the load method
      */
     public void openConnection() throws PersistenceException {
         try {
-            fos = new FileOutputStream(LOCATION);
-            fis = new FileInputStream(LOCATION);
+            fos = new FileOutputStream( LOCATION );
+            fis = new FileInputStream( LOCATION );
         } catch (FileNotFoundException e) {
-            throw new PersistenceException(PersistenceException.ExceptionType.ConnectionNotAvailable
-                    , "Error in opening the connection, File could not be found");
+            throw new PersistenceException( PersistenceException.ExceptionType.ConnectionNotAvailable
+            , "Error in opening the connection, File could not be found");
         }
         try {
-            oos = new ObjectOutputStream(fos);
-            ois = new ObjectInputStream(fis);
+            oos = new ObjectOutputStream( fos );
+            ois = new ObjectInputStream(  fis  );
         } catch (IOException e) {
-            throw new PersistenceException(PersistenceException.ExceptionType.ConnectionNotAvailable
+            throw new PersistenceException( PersistenceException.ExceptionType.ConnectionNotAvailable
                     , "Error in opening the connection, problems with the stream");
         }
     }
@@ -56,9 +57,9 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
             // Closing the inputstreams for loading
             if (ois != null) ois.close();
             if (fis != null) fis.close();
-        } catch (IOException e) {
+        } catch( IOException e ) {
             // Lazy solution: catching the exception of any closing activity ;-)
-            throw new PersistenceException(PersistenceException.ExceptionType.ClosingFailure, "error while closing connections");
+            throw new PersistenceException(PersistenceException.ExceptionType.ClosingFailure , "error while closing connections");
         }
     }
 
@@ -70,15 +71,19 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
         // Write the objects to stream
         try {
             System.out.println("LOG: Es wurden " + list.size() + " Member-Objekte wurden erfolgreich gespeichert!");
-            for(E tmp : list) {
+            for (E tmp : list) {
+                System.out.println("Ein Objekt wurde eingelesen!!!");
                 oos.writeObject(tmp);
             }
-        } catch (IOException e) {
+
+        }
+        catch (IOException e) {
             // Koennte man ausgeben für interne Debugs: e.printStackTrace();
             // Chain of Responsibility: Hochtragen der Exception in Richtung Ausgabe (UI)
             // Uebergabe in ein lesbares Format fuer den Benutzer
+            //System.out.println( "LOG: Es wurden " +  list.size() + " Member-Objekte wurden erfolgreich gespeichert!");
             e.printStackTrace();
-            throw new PersistenceException(PersistenceException.ExceptionType.SaveFailure, "Fehler beim Speichern der Datei!");
+            throw new PersistenceException( PersistenceException.ExceptionType.SaveFailure , "Fehler beim Speichern der Datei!");
         }
     }
 
@@ -88,39 +93,49 @@ public class PersistenceStrategyStream<E> implements PersistenceStrategy<E> {
      * Some coding examples comes for free :-)
      */
     public List<E> load() throws PersistenceException {
-
         // Load the objects from stream
         List<E> list = new ArrayList<E>();
 
         try {
             // Create Streams here instead using "this.openConnection();"
             // Workaround!
-            fis = new FileInputStream( "C:\\Users\\Julian\\IdeaProjects\\codesSE2023\\test.txt" );
-            ois = new ObjectInputStream( fis );
-            // Auslesen der Liste
-
-
-            /*Object obj = ois.readObject();
-            System.out.println("Test");
-            if (obj instanceof List<?>) {
-                list = (List) obj;
-            }*/
-
-            while(true) {
-                Object tmp = ois.readObject();
+            while (true) {
+                System.out.println("Vor dem Einlesen der Objekte.");
+                UserStory tmp = (UserStory) ois.readObject();
+                System.out.println("Nach dem einlesen der Objekte.");
+                System.out.println("Es wurde dieses Objekt geladen: " + tmp);
                 list.add((E) tmp);
             }
 
-        } catch (EOFException | FileNotFoundException e) {
+        }
+        catch (EOFException | FileNotFoundException e) {
             // Sup-Optimal, da Exeception in Form eines unlesbaren Stake-Traces ausgegeben wird
-            System.out.println("LOG: Es wurden " + list.size() + " User Stories erfolgreich reingeladen!");
+            e.printStackTrace();
             return list;
-        } catch (ClassNotFoundException e) {
+            //throw new PersistenceException( PersistenceException.ExceptionType.LoadFailure , "Fehler beim Laden der Datei!");
+        }
+        catch (ClassNotFoundException e) {
             // Chain of Responsbility erfuellt, durch Throw der Exceotion kann UI
             // benachrichtigt werden!
-            throw new PersistenceException(PersistenceException.ExceptionType.LoadFailure, "Fehler beim Laden der Datei! Class not found!");
+            throw new PersistenceException( PersistenceException.ExceptionType.LoadFailure , "Fehler beim Laden der Datei! Class not found!");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+    }
+
+    public void loadd() throws IOException, PersistenceException {
+
+        try {
+            while (true) {
+                UserStory tmp = (UserStory) ois.readObject();
+                System.out.println(tmp);
+                Container.getInstance().getCurrentList().add(tmp);
+            }
+        } catch (EOFException | ClassNotFoundException e) {
+            //EOFException wird geworfen, wenn am Ende der Datei angelangt ist
+            System.out.println("EINE FEHLERMELDUNG BEI LOAD!");
+        }
+        closeConnection();
     }
 }

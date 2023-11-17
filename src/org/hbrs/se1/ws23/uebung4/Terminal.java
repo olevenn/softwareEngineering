@@ -120,7 +120,7 @@ public class Terminal implements Serializable {
     public void enter(int ID, String Beschreibung, String Akzeptanzkriterium, int RM, int RS, int RR, int RA, String Projekt, double prio) {
         //UserStorie tmp = new UserStorie(ID, Beschreibung, Akzeptanzkriterium, RM, RS, RR, RA, Projekt);
         container.addUserStorie(new UserStorie(ID, Beschreibung, Akzeptanzkriterium, RM, RS, RR, RA, Projekt, prio));
-        System.out.println("User eingefügt!");
+        System.out.println("LOG: User eingefügt!");
     }
 
     public void search(int ID) {
@@ -129,15 +129,18 @@ public class Terminal implements Serializable {
             if (p.getID() == ID)
                 System.out.println(p);
         }
-
     }
 
     public void dump() {
         List<UserStorie> liste = container.getCurrentList();
-        System.out.println("Ausgabe aller User-Stories: ");
-        for (UserStorie p : liste) {
+        //liste.sort() nach UserStorie id
+        System.out.println("LOG: Ausgabe aller User-Stories: ");
+        /*for (UserStorie p : liste) {
             System.out.println(p.toString());
         }
+        */
+        liste.forEach(tmp -> System.out.println(tmp.toString()));
+        //TODO Ausgabe sortiert ausgeben serializable implementieren
     }
 
     public void load() throws IOException {

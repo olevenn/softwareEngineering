@@ -1,5 +1,8 @@
 package org.hbrs.se1.ws23.uebung4.prototype;
-    public class UserStory {
+
+import java.io.Serializable;
+
+public class UserStory implements Serializable {
         // ToDo: Sind die Attribute der Klasse UserStory vollständig? (F4)
 
         String titel;
