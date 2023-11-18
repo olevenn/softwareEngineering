@@ -13,5 +13,4 @@ public class Main {
         EingabeDialog start = new EingabeDialog();
         start.startEingabe();
     }
-
 }

@@ -59,7 +59,6 @@ public class EingabeDialog implements Serializable {
             }
         } catch (EOFException | ClassNotFoundException e) {
             //EOFException wird geworfen, wenn am Ende der Datei angelangt ist
-
         }
         fileInputStream.close();
         inputStream.close();
