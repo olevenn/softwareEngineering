@@ -36,7 +36,7 @@ public class EingabeDialog implements Serializable {
                     container.store();
                     break;
                 case "load":
-                    //container.load();
+                    //container.lo;
                     load();
                     break;
                 case "help":
@@ -54,6 +54,7 @@ public class EingabeDialog implements Serializable {
         try {
             while (true) {
                 UserStory tmp = (UserStory) inputStream.readObject();
+                System.out.println(tmp);
                 container.getCurrentList().add(tmp);
                 System.out.println("Es wurde ein Objekt geladen.");
             }
