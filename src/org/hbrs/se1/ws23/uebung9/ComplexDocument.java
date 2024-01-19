@@ -1,12 +1,13 @@
 package org.hbrs.se1.ws23.uebung9;
 
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ComplexDocument extends ADocument{
 
-    List<Document> list = new ArrayList<>();
+    private List<Document> list = new ArrayList<>();
 
     public void addDocument(Document d) {
         list.add(d);
@@ -24,7 +25,11 @@ public class ComplexDocument extends ADocument{
 
 
     @Override
-    public int size() {
-        return 0;
+    public int size() throws UnsupportedEncodingException {
+        int size = 0;
+        for (Document doc : list) {
+            size += doc.size();
+        }
+        return size;
     }
 }
